@@ -1,0 +1,65 @@
+service: yoserverless
+app: yoserverless
+org: learnuidev
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: yoserverless
+
+plugins:
+  - serverless-appsync-plugin
+
+custom:
+  appSync:
+    - ${file(yoserverless.appsync.yml)}
+
+package:
+  exclude:
+    - package-lock.json
+    - package.json
+
+resources:
+  Resources:
+    CognitoUserPoolClientWeb:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref CognitoUserPool
+        ClientName: web
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        PreventUserExistenceErrors: ENABLED
+
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 9
+            RequireLowercase: true
+            RequireNumbers: true
+            RequireSymbols: true
+            RequireUppercase: true
+        UsernameAttributes:
+          - email
+        Schema:
+          - AttributeDataType: String
+            Name: firstName
+            Required: false
+            Mutable: true
+          - AttributeDataType: String
+            Name: middleName
+            Required: false
+            Mutable: true
+          - AttributeDataType: String
+            Name: lastName
+            Required: false
+            Mutable: true
+  Outputs:
+    CognitoUserPoolId:
+      Value: !Ref CognitoUserPool

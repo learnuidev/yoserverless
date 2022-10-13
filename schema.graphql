@@ -1,0 +1,32 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  getMyTimeline(limit: Int!, nextToken: String): FleetsPage!
+}
+
+type Mutation {
+  addFleet(text: String!): Fleet!
+  like(fleetId: ID!): Boolean!
+  unlike(fleetId: ID!): Boolean!
+}
+
+interface IProfile {
+  id: ID!
+  firstName: String!
+  middleName: String
+  lastName: String!
+}
+
+type Fleet {
+  id: ID!
+  profile: IProfile!
+  createdAt: AWSDateTime
+}
+
+type FleetsPage {
+  fleets: [Fleet!]
+  nextToken: String
+}

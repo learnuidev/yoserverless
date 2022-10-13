@@ -4,5 +4,12 @@
   "main": "index.js",
   "private": true,
   "author": "learnuidev <learnuidev@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "sls": "sls"
+  },
+  "devDependencies": {
+    "serverless": "3.23.0",
+    "serverless-appsync-plugin": "1.14.0"
+  }
 }
