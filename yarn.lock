@@ -382,7 +382,7 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-aws-sdk@^2.1231.0, aws-sdk@^2.1232.0, aws-sdk@^2.881.0:
+aws-sdk@^2.1231.0, aws-sdk@^2.881.0:
   version "2.1232.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1232.0.tgz#11d38fda396e020000f69c502433bd8d004f6c68"
   integrity sha512-hpWsIdfyIK8uVWzCAHAqa3V2P/pkDy5SHy2QytpY/HylT2TnMT9NNd5hblfpvttfoIKoArnYQzVKtC20H/+yUg==
@@ -2730,7 +2730,7 @@ semver@^7.3.5, semver@^7.3.7, semver@^7.3.8:
   dependencies:
     lru-cache "^6.0.0"
 
-serverless-appsync-plugin@1.14.0:
+serverless-appsync-plugin@^1.14.0:
   version "1.14.0"
   resolved "https://registry.yarnpkg.com/serverless-appsync-plugin/-/serverless-appsync-plugin-1.14.0.tgz#63bff0e071badaedc9ef5958d19b2093f56f73ca"
   integrity sha512-ESyiLsD60TAaRcDOBx2Jk/Xtz8DIZFa4asEmVBOIUcTAZVTsHW14ygZ1UWDm+sXT7J4S18y0f2ZR5g1dyVo2LQ==
@@ -2746,14 +2746,7 @@ serverless-appsync-plugin@1.14.0:
     moment "^2.29.1"
     ramda "^0.25.0"
 
-serverless-iam-roles-per-function@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/serverless-iam-roles-per-function/-/serverless-iam-roles-per-function-3.2.0.tgz#8bb5f68e73f391ac8ff9809b8e7726e5bafba4c4"
-  integrity sha512-AXmxACHEUsDcFDcv8QNwDgn2L0brRJ7pz/phD3lFB/wQ3TtPJkorC+J7PxgFQbaWIQk15EIlU83BtKXeQoPTAg==
-  dependencies:
-    lodash "^4.17.20"
-
-serverless@3.23.0:
+serverless@^3.23.0:
   version "3.23.0"
   resolved "https://registry.yarnpkg.com/serverless/-/serverless-3.23.0.tgz#407f804d55f3c11212b8e4de4325006b01658f7d"
   integrity sha512-R1L3QeF3KGbRANQZBAhxwwfW1VKY8Mmp5cZwJmA8d5sSGYSczN6l9ST+0Uyfal+K9HtE8MP+ggaggaabor28EQ==

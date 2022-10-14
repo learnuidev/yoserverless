@@ -16,6 +16,7 @@ type Mutation {
 interface IProfile {
   id: ID!
   firstName: String!
+  middleName: String
   lastName: String!
 }
 
