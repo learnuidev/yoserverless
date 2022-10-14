@@ -7,11 +7,25 @@ provider:
   name: aws
   runtime: nodejs12.x
   profile: yoserverless
+  stage: dev
+  # What is the environment valible defined here vs defined under function
+  # these are global environement varables availabe to all the functions
+  # Environment variables defined in functions are local to that function file
+  environment:
+    # aws-sdk doesnt heep HTTP alive by default
+    # this tells the aws-sdk to enable HTTP Keep-Alive
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+    STAGE: ${self:custom.stage}
 
 plugins:
   - serverless-appsync-plugin
+  - serverless-iam-roles-per-function
 
 custom:
+  # this is saying that i am first going to look for the stage value from the command line
+  # i.e sls -s staging if you want to deploy to staging environment
+  # other wise i am going to use dev i.e self:provider.stage defaults to dev
+  stage: ${opt:stage, self:provider.stage}
   appSync:
     - ${file(yoserverless.appsync.yml)}
 
@@ -20,8 +34,35 @@ package:
     - package-lock.json
     - package.json
 
+functions:
+  confirmUserSignup:
+    handler: lambdas/confirm_user_signup.handler
+    environment:
+      USERS_TABLE: !Ref UsersTable
+    iamRoleStatements:
+      - Effect: Allow
+        Action: dynamodb:PutItem
+        Resource: !GetAtt UsersTable.Arn
+
 resources:
   Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode: PAY_PER_REQUEST
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        Tags:
+          - Key: Environment
+            Value: ${self:custom.stage}
+          # Used for analytics i.e to track cost per resource
+          - Key: Name
+            Value: users-table
+
     CognitoUserPoolClientWeb:
       Type: AWS::Cognito::UserPoolClient
       Properties:
@@ -60,6 +101,27 @@ resources:
             Name: lastName
             Required: false
             Mutable: true
+        LambdaConfig:
+          # this is the postconfirmation hook, others are:
+          # - Pre sign-up, Pre authentication, Post authentication etc
+          PostConfirmation: !GetAtt ConfirmUserSignupLambdaFunction.Arn
+
+    # we need one more thing: we need to give permission to cognito
+    # by default Cognito has no permission to call our lambda function
+
+    # This lambda permission object is going to grant
+    # our Cognito User Pool, the lambda:invokeFunction permission
+    # against the ConfirmUserSignup Lambda function
+
+    # finally lets implement confirm_user_signup.handler function
+    UserPoolInvokeConfirmUserSignupLambdaPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        Action: lambda:invokeFunction
+        FunctionName: !Ref ConfirmUserSignupLambdaFunction
+        Principal: cognito-idp.amazonaws.com
+        SourceArn: !GetAtt CognitoUserPool.Arn
+
   Outputs:
     CognitoUserPoolId:
       Value: !Ref CognitoUserPool
